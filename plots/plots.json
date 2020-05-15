@@ -1,0 +1,98 @@
+[
+
+    {
+        "type": "readers.ept",
+        "filename": "%(url)s" ,
+        "bounds": "%(ept_bounds)s",
+        "resolution":"%(ept_resolution)s",
+        "threads":16
+    },
+    {
+        "type": "filters.range",
+        "limits": "Classification![7:7],Classification![9:9]"
+    },
+    {
+        "type": "filters.range",
+        "limits": "ReturnNumber![0:0]"
+    },
+    {
+        "type": "filters.range",
+        "limits": "NumberOfReturns![0:0]"
+    },
+    {
+        "type": "filters.smrf"
+    },
+
+    {
+        "type": "filters.hag_delaunay"
+    },
+    {
+        "type": "filters.range",
+        "limits": "HeightAboveGround[0:120]"
+    },
+    {
+        "type": "filters.crop",
+        "polygon": "%(crop_polygon)s"
+    },
+    {
+        "tag": "dsm_writer",
+        "type": "writers.gdal",
+        "bounds":"%(gdal_bounds)s",
+        "resolution": "%(gdal_resolution)s",
+        "window_size": 0,
+        "output_type": "max,count,stdev",
+        "dimension": "Z",
+        "filename": "%(id)s.dsm.tif",
+        "gdalopts": "COMPRESS=LZW,TILED=YES,BIGTIFF=YES",
+        "data_type": "float",
+        "nodata": -9999
+    },
+    {
+        "tag": "ndsm_writer",
+        "type": "writers.gdal",
+        "bounds":"%(gdal_bounds)s",
+        "resolution": "%(gdal_resolution)s",
+        "window_size": 0,
+        "output_type": "max,count,stdev",
+        "dimension": "HeightAboveGround",
+        "filename": "%(id)s.ndsm.tif",
+        "gdalopts": "COMPRESS=LZW,TILED=YES,BIGTIFF=YES",
+        "data_type": "float",
+        "nodata": -9999
+    },
+    {
+        "type": "filters.ferry",
+        "dimensions": "Z=>OrigZ, HeightAboveGround=>Z"
+    },
+    {
+        "tag": "agl_writer",
+        "type": "writers.las",
+        "scale_x": "0.01",
+        "scale_y": "0.01",
+        "scale_z": "0.01",
+        "offset_x": "auto",
+        "offset_y": "auto",
+        "offset_z": "auto",
+        "minor_version": 4,
+        "dataformat_id": 1,
+        "filename": "%(id)s.agl.laz"
+    },
+    {
+        "type": "filters.range",
+        "limits": "Classification[2:2]"
+    },
+    {
+        "tag": "dem_writer",
+        "type": "writers.gdal",
+        "bounds":"%(gdal_bounds)s",
+        "resolution": "%(gdal_resolution)s",
+        "window_size": 0,
+        "output_type": "idw,count,stdev",
+        "dimension": "OrigZ",
+        "filename": "%(id)s.dem.tif",
+        "gdalopts": "COMPRESS=LZW,BIGTIFF=YES",
+        "data_type": "float",
+        "nodata": -9999
+    }
+
+]
